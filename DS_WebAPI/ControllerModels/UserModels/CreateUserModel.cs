@@ -2,7 +2,7 @@
 
 namespace DS_WebAPI.ControllerModels.UserModels
 {
-    public class AuthenticationModel
+    public class CreateUserModel
     {
         [Required]
         public string Username { get; set; }
