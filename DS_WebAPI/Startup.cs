@@ -6,10 +6,12 @@ using DS_WebAPI.SharedResources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SistemeTeShperndara.Models;
 
@@ -49,10 +51,19 @@ namespace DS_WebAPI
                     appSettings.ConnectionStrings_Local :
                     appSettings.ConnectionStrings_Public));
 
+            services
+                .AddIdentity<User, IdentityRole>(options => {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
+                .AddEntityFrameworkStores<AppDbContext>();
+
             // Authentication Setup
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             TokenProvider.Secret = appSettings.Secret;
-            services.AddAuthentication(x =>
+            services
+                .AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,8 +81,9 @@ namespace DS_WebAPI
                 };
             });
 
-            services.AddScoped<IUsersRepository<User>, UsersService>();
-            services.AddScoped<IStudentsRepository<Student>, StudentsService>();
+            services.AddAuthorization();
+
+            // services.AddScoped<IUsersRepository<User>, UsersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
