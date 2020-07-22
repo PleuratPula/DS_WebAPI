@@ -71,6 +71,7 @@ namespace DS_WebAPI
             });
 
             services.AddScoped<IUsersRepository<User>, UsersService>();
+            services.AddScoped<IStudentsRepository<Student>, StudentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
