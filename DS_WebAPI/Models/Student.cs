@@ -1,34 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace SistemeTeShperndara.Models
 {
     public class Student
     {
-        // Properties
-        public string Emri { get; set; }
-        public string Mbiemri { get; set; }
-        public DateTime Date { get; set; }
-        public string Indeksi { get; set; }
-        public Drejtimi drejtimi { get; set; }
-        public Statusi statusi { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Index { get; set; }
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+        public Status Status { get; set; }
 
-        // Constructor
-        public Student(string emri, string mbiemri, DateTime date, string indeksi, Drejtimi drejtimi, Statusi statusi)
-        {
-            Emri = emri;
-            Mbiemri = mbiemri;
-            Date = date;
-            Indeksi = indeksi;
-            this.drejtimi = drejtimi;
-            this.statusi = statusi;
-        }
+        public ICollection<Exam> Exams { get; set; }
     }
 
-    // Enum Statusi
-    public enum Statusi
+    public enum Status
     {
         Aktiv,
         Diplomuar,
