@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SistemeTeShperndara.Models;
 
-namespace SistemeTeShperndara.Models
+namespace DS_WebAPI.Dtos
 {
-    public class Student
+    public class AddStudentDto
     {
-        public int Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 
@@ -22,19 +20,8 @@ namespace SistemeTeShperndara.Models
 
         [Required]
         public int DepartmentId { get; set; }
-        public Department Department { get; set; }
 
         [Required]
         public Status Status { get; set; }
-
-        public ICollection<Exam> Exams { get; set; }
-    }
-
-    public enum Status
-    {
-        Aktiv,
-        Diplomuar,
-        Regjistrurar,
-        Suspenduar
     }
 }

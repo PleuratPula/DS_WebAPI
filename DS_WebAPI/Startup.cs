@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using AutoMapper;
 using DS_WebAPI.Data;
 using DS_WebAPI.Interfaces;
 using DS_WebAPI.Services;
@@ -6,12 +8,10 @@ using DS_WebAPI.SharedResources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SistemeTeShperndara.Models;
 
@@ -36,10 +36,25 @@ namespace DS_WebAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddXmlDataContractSerializerFormatters()
+                .AddXmlSerializerFormatters();
+
+            services.AddMvc(options =>
+            options.RespectBrowserAcceptHeader = true
+            );
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("WWW-Authenticate")
+                    .Build());
+            });
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -51,19 +66,17 @@ namespace DS_WebAPI
                     appSettings.ConnectionStrings_Local :
                     appSettings.ConnectionStrings_Public));
 
-            services
-                .AddIdentity<User, IdentityRole>(options => {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                })
-                .AddEntityFrameworkStores<AppDbContext>();
+            //services.AddIdentity<User, IdentityRole>(options =>
+            //{
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequireUppercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //}).AddEntityFrameworkStores<AppDbContext>();
 
             // Authentication Setup
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             TokenProvider.Secret = appSettings.Secret;
-            services
-                .AddAuthentication(x =>
+            services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,12 +94,28 @@ namespace DS_WebAPI
                 };
             });
 
+            services.AddSwaggerGen(setup =>
+            {
+                setup.SwaggerDoc(
+                    "v1",
+                    new Microsoft.OpenApi.Models.OpenApiInfo
+                    {
+                        Title = "Distributed Systems API",
+                        Version = "v1"
+                    });
+            });
+
             services.AddAuthorization();
 
-            // services.AddScoped<IUsersRepository<User>, UsersService>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IUsersRepository<User>, UsersService>();
+            services.AddScoped<IStudentsRepository<Student>, StudentsService>();
+            services.AddScoped<IExamsRepository<Exam>, ExamsService>();
+            services.AddScoped<IProfessorsRepository<Professor>, ProfessorsService>();
+            services.AddScoped<ISubjectsRepository<Subject>, SubjectsService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -94,13 +123,20 @@ namespace DS_WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "DS API v1");
+            });
+
 
             app.UseEndpoints(endpoints =>
             {
