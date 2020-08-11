@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using DS_WebAPI.Data;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SistemeTeShperndara.Models;
 
 namespace DS_WebAPI
@@ -94,15 +96,45 @@ namespace DS_WebAPI
                 };
             });
 
+
+            // Swagger setup
             services.AddSwaggerGen(setup =>
             {
-                setup.SwaggerDoc(
-                    "v1",
-                    new Microsoft.OpenApi.Models.OpenApiInfo
+                setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Distributed Systems API",
+                    Version = "v1"
+                });
+
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[0] },
+                };
+
+                setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT"
+                });
+
+                setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        Title = "Distributed Systems API",
-                        Version = "v1"
-                    });
+                          new OpenApiSecurityScheme
+                          {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                          },
+                          new string[] {}
+                    }
+                });
             });
 
             services.AddAuthorization();
