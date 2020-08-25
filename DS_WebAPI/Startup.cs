@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using DS_WebAPI.Data;
@@ -9,12 +8,12 @@ using DS_WebAPI.SharedResources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.IIS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using SistemeTeShperndara.Models;
 
 namespace DS_WebAPI
@@ -68,12 +67,7 @@ namespace DS_WebAPI
                     appSettings.ConnectionStrings_Local :
                     appSettings.ConnectionStrings_Public));
 
-            //services.AddIdentity<User, IdentityRole>(options =>
-            //{
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequireUppercase = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //}).AddEntityFrameworkStores<AppDbContext>();
+
 
             // Authentication Setup
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -97,47 +91,8 @@ namespace DS_WebAPI
             });
 
 
-            // Swagger setup
-            services.AddSwaggerGen(setup =>
-            {
-                setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Title = "Distributed Systems API",
-                    Version = "v1"
-                });
-
-                var security = new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Bearer", new string[0] },
-                };
-
-                setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT"
-                });
-
-                setup.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                          new OpenApiSecurityScheme
-                          {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                          },
-                          new string[] {}
-                    }
-                });
-            });
-
             services.AddAuthorization();
+            services.AddAuthentication(IISServerDefaults.AuthenticationScheme);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -146,6 +101,7 @@ namespace DS_WebAPI
             services.AddScoped<IExamsRepository<Exam>, ExamsService>();
             services.AddScoped<IProfessorsRepository<Professor>, ProfessorsService>();
             services.AddScoped<ISubjectsRepository<Subject>, SubjectsService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -162,12 +118,6 @@ namespace DS_WebAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "DS API v1");
-            });
 
 
             app.UseEndpoints(endpoints =>

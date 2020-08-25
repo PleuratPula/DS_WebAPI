@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <title>WebApi Client</title>
+
+    <link rel="stylesheet" href="scripts/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="scripts/jquery/dist/jquery.min.js"></script>
+    <script src="scripts/Functions/students.js"></script>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">WebApi Client</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Students</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="exams.html">Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <br><br>
+
+        <h3>Students</h3>
+        <table id="studentsTable" class="table table-bordered table-responsive-lg">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>DateOfBirth</th>
+                    <th>Index</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input id="name" type="text" />
+                    </td>
+                    <td><input id="surname" type="text" /></td>
+                    <td><input id="dateOfBirth" type="date" /></td>
+                    <td><input id="index" type="text" /></td>
+                    <td id="departmentElement">
+                    </td>
+                    <td id="statusElement">
+                    </td>
+                    <td><input type="button" id="insert" class="btn btn-primary" value="Insert"
+                            onclick='onAddStudent(this)' /> </td>
+            </thead>
+        </table>
+
+
+        <br />
+        <div id="msg"></div>
+    </div>
+
+    <script src="scripts/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('document').ready(function () {
+            var departments = [
+                { name: 'Zgjedh Drejtimin', value: 0 },
+                { name: 'Shkenca Kompjuterike', value: 1 },
+                { name: 'Ekonomi', value: 2 },
+            ];
+            var statuses = [
+                { name: 'Aktiv', value: 0 },
+                { name: 'Diplomuar', value: 1 },
+                { name: 'Regjistruar', value: 2 },
+                { name: 'Suspenduar', value: 3 },
+            ]
+            var departmentElement = document.getElementById("departmentElement")
+            createSelectElement(departmentElement, departments, 0);
+            var statusElement = document.getElementById("statusElement");
+            createSelectElement(statusElement, statuses, 0);
+        });
+    </script>
+</body>
+
+</html>

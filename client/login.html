@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebApiClient</title>
+    <link rel="stylesheet" href="scripts/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="scripts/jquery/dist/jquery.min.js"></script>
+    <script src="scripts/Functions/login.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">WebApi Client</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Students</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="exams.html">Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="well">
+                    <!--Table to capture username and password-->
+                    <form onsubmit='return false;'>
+                        <table class="table table-bordered table-res">
+                            <thead>
+                                <tr class="success">
+                                    <th colspan="2">
+                                        Existing User Login
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Usename</td>
+                                    <td>
+                                        <input type="text" id="txtUsername" placeholder="username...">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Password</td>
+                                    <td>
+                                        <input type="password" id="txtPassword" placeholder="Password...">
+                                    </td>
+                                </tr>
+                                <tr class="success">
+                                    <td colspan="2">
+                                        <input type="button" id="btnLogin" class="btn btn-success" value="Login" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - WebApiClient - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="scripts/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

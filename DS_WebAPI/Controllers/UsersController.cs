@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using DS_WebAPI.ControllerModels.UserModels;
 using DS_WebAPI.Dtos;
@@ -19,23 +18,13 @@ namespace DS_WebAPI.Controllers
         private readonly IUsersRepository<User> _context;
         private readonly IMapper _mapper;
 
-        //private readonly UserManager<User> userManager;
-        //private readonly SignInManager<User> signInManager;
 
         public UsersController(IUsersRepository<User> context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            //this.signInManager = signInManager;
-            //this.userManager = userManager;
         }
 
-        [HttpGet("me")]
-        public IActionResult CurrentUser()
-        {
-            var claims = User.Claims.ToDictionary(c => c.Type, c => c.Value);
-            return Ok(claims);
-        }
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
@@ -54,6 +43,7 @@ namespace DS_WebAPI.Controllers
                 return NotFound();
         }
 
+        #region
         //[HttpPost]
         //[AllowAnonymous]
         //public async Task<IActionResult> Create(CreateUserModel model)
@@ -104,5 +94,6 @@ namespace DS_WebAPI.Controllers
         //        return Unauthorized();
         //    }
         //}
+        #endregion
     }
 }

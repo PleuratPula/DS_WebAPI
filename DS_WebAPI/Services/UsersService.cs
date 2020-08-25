@@ -13,14 +13,10 @@ namespace DS_WebAPI.Services
     public class UsersService : IUsersRepository<User>
     {
         private readonly AppDbContext _context;
-        //private readonly UserManager<User> userManager;
-        //private readonly SignInManager<User> signInManager;
 
         public UsersService(AppDbContext context)
         {
             _context = context;
-            //this.userManager = userManager;
-            //this.signInManager = signInManager;
         }
 
         public Task<User> Add(User t)
@@ -46,6 +42,7 @@ namespace DS_WebAPI.Services
             }
         }
 
+        #region
         //public async Task<User> Authorize(AuthenticationModel model)
         //{
         //    var result = await signInManager.PasswordSignInAsync(model.Username, model.Password);
@@ -64,6 +61,7 @@ namespace DS_WebAPI.Services
         //        return null;
         //    }
         //}
+        #endregion
 
         public Task<User> Get(int id)
         {
